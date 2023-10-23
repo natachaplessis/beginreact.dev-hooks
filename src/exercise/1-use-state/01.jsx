@@ -1,13 +1,19 @@
-// 🦁 add useState import
-// import { useState } from "react";
+import { useState } from "react";
+
+const Name = ({name, checked}) => {
+  if (!name) {
+    return (<p>Write your name</p>)
+  } else {
+    return (<p>Hello {checked ? name.split('').reverse().join('') : name}</p>)
+  }
+}
 
 const App = () => {
-  // 🦁 Remplace le name par un state
-  let name = '';
+  const [name, setName] = useState('');
+  const [checked, setChecked] = useState(false);
 
   const handleChange = (event) => {
-    // 🦁 Update le state avec la nouvelle valeur
-    // 💡 `event.target.value`
+    setName(event.target.value)
   };
 
   return (
@@ -15,12 +21,14 @@ const App = () => {
       <input
         type="text"
         placeholder="Name"
-        // 🦁 Ajoute la valeur
-        // 🦁 Ajoute le onChange pour update le state quand la valeur change
+        value={name}
+        onChange={handleChange}
       />
-      <p>{name ? `Hello ${name}` : 'Write your name'}</p>
+      <input type="checkbox" checked={checked} onChange={(event) => (setChecked(event.target.checked))} />
+      <Name name={name} checked={checked} />
     </div>
   );
 };
+
 
 export default App;
