@@ -8,12 +8,33 @@ const Name = ({name, checked}) => {
   }
 }
 
+const useStateHistory = () => {
+  const [history, setHistory] = useState([]);
+
+  const addHistory = (value = '-') => {
+    setHistory(current => [...current, value]);
+  }
+
+  const deleteHistory = (index) => {
+    setHistory(current => {
+      current.splice(index,1);
+      return [...current];
+    })
+  }
+
+  return {history, deleteHistory, addHistory}
+
+}
+
+
 const App = () => {
   const [name, setName] = useState('');
   const [checked, setChecked] = useState(false);
+  const {history, addHistory, deleteHistory} = useStateHistory();
 
   const handleChange = (event) => {
-    setName(event.target.value)
+    setName(event.target.value);
+    addHistory(event.target.value);
   };
 
   return (
@@ -26,6 +47,11 @@ const App = () => {
       />
       <input type="checkbox" checked={checked} onChange={(event) => (setChecked(event.target.checked))} />
       <Name name={name} checked={checked} />
+      <ul>
+          {history.map((name, i) => (
+            <li key={i} onClick={() => deleteHistory(i)}>{name}</li>
+          ))}
+    </ul>
     </div>
   );
 };
