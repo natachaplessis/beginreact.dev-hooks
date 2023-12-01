@@ -1,17 +1,38 @@
-// 🦁 Ajout l'import de useEffect
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// 🦁 Crée une variable `NAME_KEY` avec la valeur `name`
+const NAME_KEY = 'name';
+
+const getInitialName = (key, defaultValue) => {
+  const storedItem = localStorage.getItem(key);
+
+  if(!storedItem) {
+    return defaultValue
+  }
+
+  try {
+    return JSON.parse(storedItem);
+  } catch(e) {
+    localStorage.removeItem(key);
+    return defaultValue;
+  }
+}
+
+const useStickyState = ({key, defaultValue}) => {
+  
+  const [name, setName] = useState(() => getInitialName(key, defaultValue)) ;
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(name));
+  }, [key, name])
+
+  return [name, setName];
+
+}
+
 
 const NameInput = ({ defaultValue }) => {
-  // 🦁 Change la valeur par défaut en récupérant la valeur stockée dans le localStorage
-  // 💡 JSON.parse(localStorage.getItem(key))
-  // 🦁 Attention il faut vérifier que localStorage.getItem(key) n'est pas null sinon tu vas avoir une erreur !
-  // Si il est vide, tu peux utiliser la valeur par défaut
-  const [name, setName] = useState(defaultValue);
 
-  // 🦁 Dans un `useEffect` update la valeur stockée dans le localStorage.
-  // 💡 localStorage.setItem(key, JSON.stringify(name));
+  const [name, setName] = useStickyState(NAME_KEY, defaultValue);
 
   return (
     <label className="textfield">
@@ -25,13 +46,39 @@ const NameInput = ({ defaultValue }) => {
   );
 };
 
-const App = () => {
+const Counter = () => {
   const [counter, setCounter] = useState(0);
+  const [checked, setChecked] = useState(false);
+  
+  useEffect(() => {
+    if (!checked) return;
+
+    const handleResize = () => {
+      setCounter((curr) => curr+1);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [checked]);
+
+  return (
+    <>
+      <button onClick={() => setCounter(counter + 1)}>{counter}</button>
+      <input type='checkbox' checked={checked} onChange={e => setChecked(e.target.checked)}></input>
+      {console.log(checked?'oui':'non')}
+    </>
+  )
+}
+
+const App = () => {
+  
 
   return (
     <div className="vertical-stack">
-      <button onClick={() => setCounter(counter + 1)}>{counter}</button>
-
+      <Counter/>
       <NameInput defaultValue="" />
     </div>
   );
