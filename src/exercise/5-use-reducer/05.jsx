@@ -1,18 +1,38 @@
 import { useReducer } from 'react';
 
-const reducer = (value, action) => {
-  // 🦁 Ici il faut que tu return la valeur incrémenté de 1
+const REDUCER_ACTIONS = {
+  INCREMENT: 'increment',
+  DECREMENT: 'decrement',
+  RESET: 'reset',
 };
 
+const reducer = (state, {action, value = 1}) => {
+  switch (action) {
+    case REDUCER_ACTIONS.INCREMENT:
+    return state+value;
+    case REDUCER_ACTIONS.DECREMENT:
+      return state-value;
+    case REDUCER_ACTIONS.RESET:
+      return 0;
+    default : {
+      throw new Error('Unknown action.');
+    }
+  }
+}
+
 const Counter = () => {
-  // 🦁 Remplace ceci par un useReducer avec `reducer` en paramètre et `0` en initialState
-  let count = 0;
+  const [count, dispatch] = useReducer(reducer, 0)
 
   return (
     <div>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.DECREMENT, value : 5})}>-5</button>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.DECREMENT})}>-</button>
       <button>{count}</button>
-      {/* 🦁 Ajoute un `onClick` qui appel la fonction dispatch de notre reducer */}
-      <button>+</button>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.INCREMENT})}>+</button>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.IN
+        CREMENT, value : 5})}>+5</button>
+      <br/>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.RESET})}>Reset</button>
     </div>
   );
 };
