@@ -29,8 +29,7 @@ const Counter = () => {
       <button onClick={()=>dispatch({action : REDUCER_ACTIONS.DECREMENT})}>-</button>
       <button>{count}</button>
       <button onClick={()=>dispatch({action : REDUCER_ACTIONS.INCREMENT})}>+</button>
-      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.IN
-        CREMENT, value : 5})}>+5</button>
+      <button onClick={()=>dispatch({action : REDUCER_ACTIONS.INCREMENT, value : 5})}>+5</button>
       <br/>
       <button onClick={()=>dispatch({action : REDUCER_ACTIONS.RESET})}>Reset</button>
     </div>
